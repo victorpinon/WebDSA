@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>	
+<head>
+
+	<title>Scoreboard</title>
+
+	<script src="scripts/jquery-3.2.1.js"></script>
+
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	
+
+</head>
+<body>
+	<br />
+	<nav class="navbar navbar-default">
+		<a class="navbar-brand" id="navBarName" style="margin-left: 5%">Admin</a>
+		  <div class="container-fluid">
+		    <div class="navbar-header">
+		      
+		    </div>
+		    <ul class="nav navbar-nav">
+		      <li class="active" ><a id ="goAdminUserList" style="cursor: pointer">User List</a></li>
+		      <li><a id ="goScoreboard" style="cursor: pointer">Scoreboard</a></li>
+		    </ul>
+		    <ul class="nav navbar-nav navbar-right" style="margin-right: 5%">
+		      <li><a id="logout" style="cursor: pointer"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+		    </ul>
+		  </div>
+	</nav>
+
+	<div class="container fixed" style="margin-top: 5%">
+		<table class="table table-hover">
+		    <thead>
+		      <tr>
+		        <th>User Name</th>
+		        <th>Game</th>
+		        <th>Time</th>
+		        <th>Health Points</th>
+		      </tr>
+		    </thead>
+		    <tbody class="repos">
+		   		<tr>
+			        <th>Sergi</th>
+			        <th>Partida1</th>
+			        <th>15:36</th>
+			        <th>3 <span class="glyphicon glyphicon-heart-empty"></span></th>
+		      	</tr>
+		      	<tr>
+			        <th>Meritxell</th>
+			        <th>Joc1</th>
+			        <th>17:02</th>
+			        <th>1 <span class="glyphicon glyphicon-heart-empty"></span></th>
+		      	</tr>
+		      	<tr>
+			        <th>Noelia</th>
+			        <th>asfrfhweo</th>
+			        <th>25:58</th>
+			        <th>2 <span class="glyphicon glyphicon-heart-empty"></span></th>
+		      	</tr>
+		    </tbody>
+		</table>
+	</div>
+	
+</body>
+</html>
