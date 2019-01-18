@@ -203,52 +203,107 @@ $(document).ready(function() {
 	if(window.document.title == "Scoreboard"){
 		$("#navBarName").text(localStorage.getItem("userName"));
 
-		var list = new Array();
-		
-		$.ajax({
-		 	contentType: "application/json;charset=utf-8",
-            type: "GET",
-            url: 'http://147.83.7.203:8080/APIGame/user/loadUsers',
-            success: function(data)
-            {
-            	
-            	var i;
-                for (i = 0; i < data.length; i++) {
-            		let name = data[i].userName;
-            		$.ajax({
-					 	contentType: "application/json;charset=utf-8",
-			            type: "GET",
-			            url: 'http://147.83.7.203:8080/APIGame/game/gameList/'+name,
-			            success: function(data)
-			            {
-			            	var j;
-			                for (j = 0; j < data.length; j++) {
+		var list = [];
 
-			                	let completed = false;
-			                	if(data[j].isCompleted == 1){
-			                		completed = true;
-			                	}
+		function fetchUserGame(userName) {
+			return fetch(`http://147.83.7.203:8080/APIGame/game/gameList/${userName}`).then(response => response.json()).then(result => result)
+		}
 
-			                	list.push({
-			                		"nameGame": data[j].nameGame,
-			                		"userName": name,
-			                		"gameLength": data[j].gameLength,
-			                		"healthPoints": data[j].healthPoints,
-			                		"isCompleted": completed
-			                	});
+		fetch("http://147.83.7.203:8080/APIGame/user/loadUsers").then(response => response.json()).then(result => {
+			result.forEach((item,index) => {
+				let name = item.userName
+				let userGames = fetchUserGame(name).then(result => {
+					result.forEach((userGame) => {
+						let completed = userGame.isCompleted == 1;
+
+						list.push({
+	                		"nameGame": userGame.nameGame,
+	                		"userName": name,
+	                		"gameLength": userGame.gameLength,
+	                		"healthPoints": userGame.healthPoints,
+	                		"isCompleted": completed
+	                	});
+
+					})
+				})
+			})
+		})
+
+		// No ha terminado llamada ajax, array aún está vacío
+		//console.log(list)
+
+		// Esperamos dos segundos qa que termine y se rellene la tabla
+		setTimeout(() => {
+			renderSortedTable(list)
+		}, 1000)
+
+		function sorter(item1, item2) {
+			if(item1.gameLength > item2.gameLength) {
+				return 1;
+			} 
+
+			if(item1.gameLength < item2.gameLength) {
+				return -1;
+			}
+
+			return 0;
+		}
+
+		// Podemos delegar/abstraer el render a un metodo separado
+		function renderSortedTable(list) {
+
+			// Ordenar lista
+			let sortedList = list.sort(sorter)
+			//console.log(sortedList)
+			for(var j = 0; j < list.length; j++){
+				if(list[j].isCompleted){
+					$("#scoreList").append("<tr> <td>"+list[j].userName+"</td><td>"+list[j].nameGame+"</td> <td>"+list[j].gameLength+"</td> <td>"+list[j].healthPoints+"</td> <td>"+list[j].isCompleted+"</td></tr>");
+				}
+			}
+
+		}
+
+		// $.ajax({
+		//  	contentType: "application/json;charset=utf-8",
+  //           type: "GET",
+  //           url: 'http://147.83.7.203:8080/APIGame/user/loadUsers',
+  //           success: function(data)
+  //           {
+  //           	var i;
+  //               for (i = 0; i < data.length; i++) {
+  //           		let name = data[i].userName;
+  //           		$.ajax({
+		// 			 	contentType: "application/json;charset=utf-8",
+		// 	            type: "GET",
+		// 	            url: 'http://147.83.7.203:8080/APIGame/game/gameList/'+name,
+		// 	            success: function(data)
+		// 	            {
+		// 	            	var j;
+		// 	                for (j = 0; j < data.length; j++) {
+
+		// 	                	let completed = false;
+		// 	                	if(data[j].isCompleted == 1){
+		// 	                		completed = true;
+		// 	                	}
+
+		// 	                	list.push({
+		// 	                		"nameGame": data[j].nameGame,
+		// 	                		"userName": name,
+		// 	                		"gameLength": data[j].gameLength,
+		// 	                		"healthPoints": data[j].healthPoints,
+		// 	                		"isCompleted": completed
+		// 	                	});
 			                	
 
-			                	$("#scoreList").append("<tr> <td>"+name+"</td><td>"+data[j].nameGame+"</td> <td>"+data[j].gameLength+"</td> <td>"+data[j].healthPoints+"</td> <td>"+completed+"</td></tr>");
-			                }
-			            }
-			        });
-                }
-                console.log(list);
-                
-               
-                
-            }
-        });
+		// 	                	$("#scoreList").append("<tr> <td>"+name+"</td><td>"+data[j].nameGame+"</td> <td>"+data[j].gameLength+"</td> <td>"+data[j].healthPoints+"</td> <td>"+completed+"</td></tr>");
+		// 	                }
+		// 	            }
+		// 	        });
+  //               }
+  //               console.log(list);
+  //           }
+        // });
+        
 
 
 		
