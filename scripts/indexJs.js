@@ -11,8 +11,8 @@ $(document).ready(function() {
 		if($("#password").val() != "" && $("#user").val()!=  ""){
 			$.ajax({
 			 	contentType: "application/json;charset=utf-8",
-			 	dataType: "json",
 	            type: "POST",
+	            dataType: "json",	
 	            url: 'http://147.83.7.203:8080/APIGame/user/login',
 	            data: JSON.stringify({
 					userName: $("#user").val(),
@@ -57,7 +57,10 @@ $(document).ready(function() {
             success: function(data)
             {
                 for (var i = 0; i < data.length; i++) {
-                	$("#userList").append("<tr> <td>"+data[i].userName+"</td> <td>"+data[i].isAdmin+"</td> <td>"+data[i].isBanned+"</td> <td>"+data[i].money+"</td></tr>");
+                	$("#userList").append("<tr> <td>"+data[i].userName+"</td> \
+                							<td>"+data[i].isAdmin+"</td> \
+                							<td>"+data[i].isBanned+"</td> \
+                							<td>"+data[i].money+"</td></tr>");
                 }
             }
         });
@@ -72,18 +75,20 @@ $(document).ready(function() {
 	}
 
 	$("#logout").click(function(){
+		localStorage.removeItem("userInfoName");
 		localStorage.removeItem("userName");
 		window.open("index.html", "_self");
 	});
 
 	$("#goAdminUserList").click(function(){
+		localStorage.removeItem("userInfoName");
 		window.open("adminUserList.html", "_self");
 	});
 
 	$("#goScoreboard").click(function(){
+		localStorage.removeItem("userInfoName");
 		window.open("scoreboard.html", "_self");
 	});
-
 
 	/*
 	*********************************************************************************
@@ -124,11 +129,40 @@ $(document).ready(function() {
                 }
             }
         });
+
+		$.ajax({
+		 	contentType: "application/json;charset=utf-8",
+            type: "GET",
+            url: 'http://147.83.7.203:8080/APIGame/game/gameList/'+localStorage.getItem("userInfoName"),
+            success: function(data)
+            {
+            	if(data.length > 0){
+            		for (var i = 0; i < data.length; i++) {
+	                	$("#userGameList").append("<tr> <td>"+data[i].nameGame+"</td> <td>"+data[i].healthPoints+"</td> <td>"+data[i].isCompleted+"</td> <td>"+data[i].gameLength+"</td></tr>");
+                	}
+            	} else {
+            		$("#userGameList").html("<h4><b>This user has not played any games</b></h4>");
+            	}
+                
+            }
+        });
+
 	}
 
 	$("#ban").click(function(){
-		
-		//window.open("adminUserInfo.html", "_self");
+		$.ajax({
+		 	contentType: "application/json;charset=utf-8",
+			crossDomain: true,
+            type: "PATCH",
+            dataType: "json",
+            url: 'http://147.83.7.203:8080/APIGame/user/banned/',
+            data: localStorage.getItem("userInfoName"),
+            success: function(data)
+            {
+                console.log(data);
+            }
+        });
+		window.open("adminUserInfo.html", "_self");
 	});
 
 	$("#admin").click(function(){
@@ -136,18 +170,89 @@ $(document).ready(function() {
 		 	contentType: "application/json;charset=utf-8",
 			crossDomain: true,
             type: "PATCH",
-            url: 'http://147.83.7.203:8080/APIGame/user/admin/'+localStorage.getItem("userInfoName"),
+            dataType: "json",
+            url: 'http://147.83.7.203:8080/APIGame/user/admin/',
+            data: localStorage.getItem("userInfoName"),
             success: function(data)
             {
                 console.log(data);
             }
         });
-		//window.open("adminUserInfo.html", "_self");
+		window.open("adminUserInfo.html", "_self");
 	});
 
+	/*
+	*********************************************************************************
+									socreboard.html
+	*********************************************************************************
+	*/
+    function dynamicSort(property) {
+	    var sortOrder = 1;
+	    if(property[0] === "-") {
+	        sortOrder = -1;
+	        property = property.substr(1);
+	    }
+	    return function (a,b) {
+	        var result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
+	        return result * sortOrder;
+	    }
+	}
+
+	
+
+	if(window.document.title == "Scoreboard"){
+		$("#navBarName").text(localStorage.getItem("userName"));
+
+		var list = new Array();
+		
+		$.ajax({
+		 	contentType: "application/json;charset=utf-8",
+            type: "GET",
+            url: 'http://147.83.7.203:8080/APIGame/user/loadUsers',
+            success: function(data)
+            {
+            	
+            	var i;
+                for (i = 0; i < data.length; i++) {
+            		let name = data[i].userName;
+            		$.ajax({
+					 	contentType: "application/json;charset=utf-8",
+			            type: "GET",
+			            url: 'http://147.83.7.203:8080/APIGame/game/gameList/'+name,
+			            success: function(data)
+			            {
+			            	var j;
+			                for (j = 0; j < data.length; j++) {
+
+			                	let completed = false;
+			                	if(data[j].isCompleted == 1){
+			                		completed = true;
+			                	}
+
+			                	list.push({
+			                		"nameGame": data[j].nameGame,
+			                		"userName": name,
+			                		"gameLength": data[j].gameLength,
+			                		"healthPoints": data[j].healthPoints,
+			                		"isCompleted": completed
+			                	});
+			                	
+
+			                	$("#scoreList").append("<tr> <td>"+name+"</td><td>"+data[j].nameGame+"</td> <td>"+data[j].gameLength+"</td> <td>"+data[j].healthPoints+"</td> <td>"+completed+"</td></tr>");
+			                }
+			            }
+			        });
+                }
+                console.log(list);
+                
+               
+                
+            }
+        });
 
 
+		
 
-
+	}
 
 });
