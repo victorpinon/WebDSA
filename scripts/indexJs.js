@@ -204,7 +204,7 @@ $(document).ready(function() {
 		$("#navBarName").text(localStorage.getItem("userName"));
 
 		var list = [];
-
+/*
 		function fetchUserGame(userName) {
 			return fetch(`http://147.83.7.203:8080/APIGame/game/gameList/${userName}`).then(response => response.json()).then(result => result)
 		}
@@ -233,7 +233,46 @@ $(document).ready(function() {
 		//console.log(list)
 
 		// Esperamos dos segundos qa que termine y se rellene la tabla
-		setTimeout(() => {
+		*/
+
+		$.ajax({
+		 	contentType: "application/json;charset=utf-8",
+            type: "GET",
+            url: 'http://147.83.7.203:8080/APIGame/user/loadUsers',
+            success: function(data)
+            {
+            	var i;
+                for (i = 0; i < data.length; i++) {
+            		let name = data[i].userName;
+            		$.ajax({
+					 	contentType: "application/json;charset=utf-8",
+			            type: "GET",
+			            url: 'http://147.83.7.203:8080/APIGame/game/gameList/'+name,
+			            success: function(data)
+			            {
+			            	var j;
+			                for (j = 0; j < data.length; j++) {
+
+			                	let completed = false;
+			                	if(data[j].isCompleted == 1){
+			                		completed = true;
+			                	}
+
+			                	list.push({
+			                		"nameGame": data[j].nameGame,
+			                		"userName": name,
+			                		"gameLength": data[j].gameLength,
+			                		"healthPoints": data[j].healthPoints,
+			                		"isCompleted": completed
+			                	});
+			                }
+			            }
+			        });
+                }
+            }
+        });
+
+        setTimeout(() => {
 			renderSortedTable(list)
 		}, 1000)
 
@@ -262,47 +301,6 @@ $(document).ready(function() {
 			}
 
 		}
-
-		// $.ajax({
-		//  	contentType: "application/json;charset=utf-8",
-  //           type: "GET",
-  //           url: 'http://147.83.7.203:8080/APIGame/user/loadUsers',
-  //           success: function(data)
-  //           {
-  //           	var i;
-  //               for (i = 0; i < data.length; i++) {
-  //           		let name = data[i].userName;
-  //           		$.ajax({
-		// 			 	contentType: "application/json;charset=utf-8",
-		// 	            type: "GET",
-		// 	            url: 'http://147.83.7.203:8080/APIGame/game/gameList/'+name,
-		// 	            success: function(data)
-		// 	            {
-		// 	            	var j;
-		// 	                for (j = 0; j < data.length; j++) {
-
-		// 	                	let completed = false;
-		// 	                	if(data[j].isCompleted == 1){
-		// 	                		completed = true;
-		// 	                	}
-
-		// 	                	list.push({
-		// 	                		"nameGame": data[j].nameGame,
-		// 	                		"userName": name,
-		// 	                		"gameLength": data[j].gameLength,
-		// 	                		"healthPoints": data[j].healthPoints,
-		// 	                		"isCompleted": completed
-		// 	                	});
-			                	
-
-		// 	                	$("#scoreList").append("<tr> <td>"+name+"</td><td>"+data[j].nameGame+"</td> <td>"+data[j].gameLength+"</td> <td>"+data[j].healthPoints+"</td> <td>"+completed+"</td></tr>");
-		// 	                }
-		// 	            }
-		// 	        });
-  //               }
-  //               console.log(list);
-  //           }
-        // });
         
 
 
