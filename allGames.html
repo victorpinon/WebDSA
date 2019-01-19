@@ -2,15 +2,14 @@
 <html>	
 <head>
 
-	<title>Admin User Info</title>
+	<title>All Games</title>
 
 	<script src="scripts/jquery-3.2.1.js"></script>
 
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
-  	<script src="scripts/indexJs.js"></script>
+	<script src="scripts/indexJs.js"></script>
 	
-
 </head>
 <body id="adminUserList">
 	<br />
@@ -23,7 +22,7 @@
 		    <ul class="nav navbar-nav">
 		      <li ><a id ="goAdminUserList" style="cursor: pointer">User List</a></li>
 		      <li><a id ="goScoreboard" style="cursor: pointer">Scoreboard</a></li>
-		      <li><a id ="goAllGames" style="cursor: pointer">All Games</a></li>
+		      <li class="active" ><a id ="goAllGames" style="cursor: pointer">All Games</a></li>
 		    </ul>
 		    <ul class="nav navbar-nav navbar-right" style="margin-right: 5%">
 		      <li><a id="logout" style="cursor: pointer"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
@@ -31,46 +30,21 @@
 		  </div>
 	</nav>
 
-	<div class="container-fluid" id="userInfo" style="margin-top: 5%; margin-left: 10%">
-  	</div>
-
-  	<div class="row">
-			<div class="col-xs-2 col-sm-2 col-md-4 col-lg-4">
-			</div>
-			<div class="col-xs-8 col-sm-8 col-md-4 col-lg-4">
-		    	<button type="button" class="btn btn-lg btn-block" id="ban">Ban</button>
-			</div>
-			<div class="col-xs-2 col-sm-2 col-md-4 col-lg-4">
-			</div>
-	</div>
-	<br />
-	<div class="row">
-		<div class="col-xs-2 col-sm-2 col-md-4 col-lg-4">
-		</div>
-		<div class="col-xs-8 col-sm-8 col-md-4 col-lg-4">
-	    	<button type="button" id="admin" class="btn btn-lg btn-block">Admin</button>
-		</div>
-		<div class="col-xs-2 col-sm-2 col-md-4 col-lg-4">
-		</div>
-	</div>
-
 	<div class="container fixed" style="margin-top: 5%">
 		<table class="table table-hover">
 		    <thead>
 		      <tr>
-		        <th><h3>Game name</h3></th>
+		        <th><h3>User Name</h3></th>
+		        <th><h3>Game</h3></th>
+		        <th><h3>Time</h3></th>
 		        <th><h3>Health Points</h3></th>
-		        <th><h3>Is Completed?</h3></th>
-		        <th><h3>Game Length</h3></th>
+		        <th><h3>Is completed?</h3></th>
 		      </tr>
 		    </thead>
-		    <tbody class="repos" id="userGameList">
-		    	
+		    <tbody class="repos" id="gameList">
 		    </tbody>
 		</table>
 	</div>
-
-	
 	
 </body>
 </html>
