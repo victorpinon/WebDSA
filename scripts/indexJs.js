@@ -1,7 +1,5 @@
 $(document).ready(function() {
 
-	
-
 	/*
 	*********************************************************************************
 									Index.html
@@ -25,8 +23,8 @@ $(document).ready(function() {
 	                } else if (data.code == 1) {
 	                	alert("User is banned");
 	                } else if (data.code == 2) {
-	                	alert("Correct user");
 	                	localStorage.setItem( "userName",  $("#user").val());
+	                	window.open("scoreboardNormalUser.html", "_self");  
 	                } else if (data.code == 3) {
 	                	localStorage.setItem( "userName",  $("#user").val());
 	                	window.open("adminUserList.html", "_self");  	
@@ -57,9 +55,17 @@ $(document).ready(function() {
             success: function(data)
             {
                 for (var i = 0; i < data.length; i++) {
-                	$("#userList").append("<tr> <td>"+data[i].userName+"</td> \
-                							<td>"+data[i].isAdmin+"</td> \
-                							<td>"+data[i].isBanned+"</td> \
+                	let admin = false;
+                	if(data[i].isAdmin==true){
+                		admin = true;
+                	}
+                	let banned = false;
+                	if(data[i].isBanned==true){
+                		banned = true;
+                	}
+                	$("#userList").append("<tr> <td><b>"+data[i].userName+"</b></td> \
+                							<td>"+admin+"</td> \
+                							<td>"+banned+"</td> \
                 							<td>"+data[i].money+"</td></tr>");
                 }
             }
@@ -115,7 +121,7 @@ $(document).ready(function() {
                 		}
 
                 		var banned = false;
-                		if(data[i].isAdmin == 1){
+                		if(data[i].isBanned == 1){
                 			banned = true;
                 			$("#ban").text("Un-Ban");
                 		}
@@ -138,7 +144,7 @@ $(document).ready(function() {
             {
             	if(data.length > 0){
             		for (var i = 0; i < data.length; i++) {
-	                	$("#userGameList").append("<tr> <td>"+data[i].nameGame+"</td> <td>"+data[i].healthPoints+"</td> <td>"+data[i].isCompleted+"</td> <td>"+data[i].gameLength+"</td></tr>");
+	                	$("#userGameList").append("<tr> <td><b>"+data[i].nameGame+"</b></td> <td>"+data[i].healthPoints+"  <span class='glyphicon glyphicon-heart'></span></td> <td>"+data[i].isCompleted+"</td> <td>"+data[i].gameLength+"</td></tr>");
                 	}
             	} else {
             		$("#userGameList").html("<h4><b>This user has not played any games</b></h4>");
@@ -156,13 +162,16 @@ $(document).ready(function() {
             type: "PATCH",
             dataType: "json",
             url: 'http://147.83.7.203:8080/APIGame/user/banned/',
-            data: localStorage.getItem("userInfoName"),
+            data: JSON.stringify(localStorage.getItem("userInfoName")),
             success: function(data)
             {
                 console.log(data);
             }
         });
-		window.open("adminUserInfo.html", "_self");
+        setTimeout(() => {
+			window.open("adminUserInfo.html", "_self");
+		}, 1000)
+		
 	});
 
 	$("#admin").click(function(){
@@ -172,13 +181,15 @@ $(document).ready(function() {
             type: "PATCH",
             dataType: "json",
             url: 'http://147.83.7.203:8080/APIGame/user/admin/',
-            data: localStorage.getItem("userInfoName"),
+            data: JSON.stringify(localStorage.getItem("userInfoName")),
             success: function(data)
             {
                 console.log(data);
             }
         });
-		window.open("adminUserInfo.html", "_self");
+		setTimeout(() => {
+			window.open("adminUserInfo.html", "_self");
+		}, 1000)
 	});
 
 	/*
@@ -186,20 +197,6 @@ $(document).ready(function() {
 									socreboard.html
 	*********************************************************************************
 	*/
-    function dynamicSort(property) {
-	    var sortOrder = 1;
-	    if(property[0] === "-") {
-	        sortOrder = -1;
-	        property = property.substr(1);
-	    }
-	    return function (a,b) {
-	        var result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
-	        return result * sortOrder;
-	    }
-	}
-
-	
-
 	if(window.document.title == "Scoreboard"){
 		$("#navBarName").text(localStorage.getItem("userName"));
 
@@ -274,7 +271,7 @@ $(document).ready(function() {
 
         setTimeout(() => {
 			renderSortedTable(list)
-		}, 1000)
+		}, 1300)
 
 		function sorter(item1, item2) {
 			if(item1.gameLength > item2.gameLength) {
@@ -296,15 +293,82 @@ $(document).ready(function() {
 			//console.log(sortedList)
 			for(var j = 0; j < list.length; j++){
 				if(list[j].isCompleted){
-					$("#scoreList").append("<tr> <td>"+list[j].userName+"</td><td>"+list[j].nameGame+"</td> <td>"+list[j].gameLength+"</td> <td>"+list[j].healthPoints+"</td> <td>"+list[j].isCompleted+"</td></tr>");
+					$("#scoreList").append("<tr> <td><b>"+list[j].userName+"</b></td><td>"+list[j].nameGame+"</td> <td>"+list[j].gameLength+"</td> <td>"+list[j].healthPoints+"  <span class='glyphicon glyphicon-heart'></span></td> <td>"+list[j].isCompleted+"</td></tr>");
 				}
 			}
 
 		}
-        
 
+	}
 
+	/*
+	*********************************************************************************
+									myAccount.html
+	*********************************************************************************
+	*/
+
+	$("#goMyAccount").click(function(){
+		window.open("myAccount.html", "_self");
+	});
+
+	$("#goNormalScoreboard").click(function(){
+		window.open("scoreboardNormalUser.html", "_self");
+	});
+
+	if(window.document.title == "My Account"){
+		$("#navBarName").text(localStorage.getItem("userName"));
 		
+		$.ajax({
+		 	contentType: "application/json;charset=utf-8",
+            type: "GET",
+            url: 'http://147.83.7.203:8080/APIGame/user/loadUsers',
+            success: function(data)
+            {
+            	var i = 0;
+                for (i = 0; i < data.length; i++) {
+                	if(data[i].userName == localStorage.getItem("userName") ){
+                		var admin = false;
+                		if(data[i].isAdmin == 1){
+                			admin = true;
+                			$("#admin").text("Un-Admin");
+                		}
+
+                		var banned = false;
+                		if(data[i].isBanned == 1){
+                			banned = true;
+                			$("#ban").text("Un-Ban");
+                		}
+
+                		$("#userInfo").append(	"<h3><b>User Name: </b>"+data[i].userName+"</h3> \
+                		 						<h3><b>Is admin?: </b>"+admin+"</h3>   \
+                		 						<h3><b>Is banned?: </b>"+banned+"</h3>  \
+                		 						<h3><b>Money: </b>"+data[i].money+"</h3>");
+                		break;
+                	}
+                }
+            }
+        });
+
+		$.ajax({
+		 	contentType: "application/json;charset=utf-8",
+            type: "GET",
+            url: 'http://147.83.7.203:8080/APIGame/game/gameList/'+localStorage.getItem("userName"),
+            success: function(data)
+            {
+            	if(data.length > 0){
+            		for (var i = 0; i < data.length; i++) {
+            			let completed = false;
+            			if(data[i].isCompleted == 1){
+            				completed = true;
+            			}
+	                	$("#userGameList").append("<tr> <td><b>"+data[i].nameGame+"</b></td> <td>"+data[i].healthPoints+"  <span class='glyphicon glyphicon-heart'></span></td> <td>"+completed+"</td> <td>"+data[i].gameLength+"</td></tr>");
+                	}
+            	} else {
+            		$("#userGameList").html("<h4><b>This user has not played any games</b></h4>");
+            	}
+                
+            }
+        });
 
 	}
 
