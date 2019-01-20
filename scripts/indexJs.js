@@ -11,7 +11,7 @@ $(document).ready(function() {
 			 	contentType: "application/json;charset=utf-8",
 	            type: "POST",
 	            dataType: "json",	
-	            url: 'http://147.83.7.203:8080/APIGame/user/login',
+	            url: 'http://localhost:8080/APIGame/user/login',
 	            data: JSON.stringify({
 					userName: $("#user").val(),
 	              	password: $("#password").val()
@@ -44,7 +44,7 @@ $(document).ready(function() {
 			 	contentType: "application/json;charset=utf-8",
 	            type: "POST",
 	            dataType: "json",	
-	            url: 'http://147.83.7.203:8080/APIGame/user/register',
+	            url: 'http://localhost:8080/APIGame/user/register',
 	            data: JSON.stringify({
 					userName: $("#user").val(),
 	              	password: $("#password").val()
@@ -80,7 +80,7 @@ $(document).ready(function() {
 		$.ajax({
 		 	contentType: "application/json;charset=utf-8",
             type: "GET",
-            url: 'http://147.83.7.203:8080/APIGame/user/loadUsers',
+            url: 'http://localhost:8080/APIGame/user/loadUsers',
             success: function(data)
             {
                 for (var i = 0; i < data.length; i++) {
@@ -142,7 +142,7 @@ $(document).ready(function() {
 		$.ajax({
 		 	contentType: "application/json;charset=utf-8",
             type: "GET",
-            url: 'http://147.83.7.203:8080/APIGame/user/loadUsers',
+            url: 'http://localhost:8080/APIGame/user/loadUsers',
             success: function(data)
             {
             	var i = 0;
@@ -173,7 +173,7 @@ $(document).ready(function() {
 		$.ajax({
 		 	contentType: "application/json;charset=utf-8",
             type: "GET",
-            url: 'http://147.83.7.203:8080/APIGame/game/gameList/'+localStorage.getItem("userInfoName"),
+            url: 'http://localhost:8080/APIGame/game/gameList/'+localStorage.getItem("userInfoName"),
             success: function(data)
             {
             	if(data.length > 0){
@@ -195,7 +195,7 @@ $(document).ready(function() {
 			crossDomain: true,
             type: "PATCH",
             dataType: "json",
-            url: 'http://147.83.7.203:8080/APIGame/user/banned/',
+            url: 'http://localhost:8080/APIGame/user/banned/',
             data: JSON.stringify(localStorage.getItem("userInfoName")),
             success: function(data)
             {
@@ -214,7 +214,7 @@ $(document).ready(function() {
 			crossDomain: true,
             type: "PATCH",
             dataType: "json",
-            url: 'http://147.83.7.203:8080/APIGame/user/admin/',
+            url: 'http://localhost:8080/APIGame/user/admin/',
             data: JSON.stringify(localStorage.getItem("userInfoName")),
             success: function(data)
             {
@@ -237,10 +237,10 @@ $(document).ready(function() {
 		var list = [];
 /*
 		function fetchUserGame(userName) {
-			return fetch(`http://147.83.7.203:8080/APIGame/game/gameList/${userName}`).then(response => response.json()).then(result => result)
+			return fetch(`http://localhost:8080/APIGame/game/gameList/${userName}`).then(response => response.json()).then(result => result)
 		}
 
-		fetch("http://147.83.7.203:8080/APIGame/user/loadUsers").then(response => response.json()).then(result => {
+		fetch("http://localhost:8080/APIGame/user/loadUsers").then(response => response.json()).then(result => {
 			result.forEach((item,index) => {
 				let name = item.userName
 				let userGames = fetchUserGame(name).then(result => {
@@ -269,7 +269,7 @@ $(document).ready(function() {
 		$.ajax({
 		 	contentType: "application/json;charset=utf-8",
             type: "GET",
-            url: 'http://147.83.7.203:8080/APIGame/user/loadUsers',
+            url: 'http://localhost:8080/APIGame/user/loadUsers',
             success: function(data)
             {
             	var i;
@@ -278,7 +278,7 @@ $(document).ready(function() {
             		$.ajax({
 					 	contentType: "application/json;charset=utf-8",
 			            type: "GET",
-			            url: 'http://147.83.7.203:8080/APIGame/game/gameList/'+name,
+			            url: 'http://localhost:8080/APIGame/game/gameList/'+name,
 			            success: function(data)
 			            {
 			            	var j;
@@ -355,7 +355,7 @@ $(document).ready(function() {
 		$.ajax({
 		 	contentType: "application/json;charset=utf-8",
             type: "GET",
-            url: 'http://147.83.7.203:8080/APIGame/user/loadUsers',
+            url: 'http://localhost:8080/APIGame/user/loadUsers',
             success: function(data)
             {
             	var i = 0;
@@ -386,7 +386,7 @@ $(document).ready(function() {
 		$.ajax({
 		 	contentType: "application/json;charset=utf-8",
             type: "GET",
-            url: 'http://147.83.7.203:8080/APIGame/game/gameList/'+localStorage.getItem("userName"),
+            url: 'http://localhost:8080/APIGame/game/gameList/'+localStorage.getItem("userName"),
             success: function(data)
             {
             	if(data.length > 0){
@@ -419,7 +419,7 @@ $(document).ready(function() {
 		$.ajax({
 		 	contentType: "application/json;charset=utf-8",
             type: "GET",
-            url: 'http://147.83.7.203:8080/APIGame/user/loadUsers',
+            url: 'http://localhost:8080/APIGame/user/loadUsers',
             success: function(data)
             {
             	var i;
@@ -428,7 +428,7 @@ $(document).ready(function() {
             		$.ajax({
 					 	contentType: "application/json;charset=utf-8",
 			            type: "GET",
-			            url: 'http://147.83.7.203:8080/APIGame/game/gameList/'+name,
+			            url: 'http://localhost:8080/APIGame/game/gameList/'+name,
 			            success: function(data)
 			            {
 			            	var j;
